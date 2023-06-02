@@ -429,20 +429,22 @@ impl<P: JsonRpcClient> Middleware for Provider<P> {
             .base_fee_per_gas
             .ok_or_else(|| ProviderError::CustomError("EIP-1559 not activated".into()))?;
 
-        let fee_history = self
-            .fee_history(
-                utils::EIP1559_FEE_ESTIMATION_PAST_BLOCKS,
-                BlockNumber::Latest,
-                &[utils::EIP1559_FEE_ESTIMATION_REWARD_PERCENTILE],
-            )
-            .await?;
+        // let fee_history = self
+        //     .fee_history(
+        //         utils::EIP1559_FEE_ESTIMATION_PAST_BLOCKS,
+        //         BlockNumber::Latest,
+        //         &[utils::EIP1559_FEE_ESTIMATION_REWARD_PERCENTILE],
+        //     )
+        //     .await?;
+        //
+        // // use the provided fee estimator function, or fallback to the default implementation.
+        // let (max_fee_per_gas, max_priority_fee_per_gas) = if let Some(es) = estimator {
+        //     es(base_fee_per_gas, fee_history.reward)
+        // } else {
+        //     utils::eip1559_default_estimator(base_fee_per_gas, fee_history.reward)
+        // };
 
-        // use the provided fee estimator function, or fallback to the default implementation.
-        let (max_fee_per_gas, max_priority_fee_per_gas) = if let Some(es) = estimator {
-            es(base_fee_per_gas, fee_history.reward)
-        } else {
-            utils::eip1559_default_estimator(base_fee_per_gas, fee_history.reward)
-        };
+        let (max_fee_per_gas, max_priority_fee_per_gas) = utils::eip1559_default_estimator(base_fee_per_gas, fee_history.reward);
 
         Ok((max_fee_per_gas, max_priority_fee_per_gas))
     }
