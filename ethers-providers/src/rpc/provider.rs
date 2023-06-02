@@ -444,7 +444,7 @@ impl<P: JsonRpcClient> Middleware for Provider<P> {
         //     utils::eip1559_default_estimator(base_fee_per_gas, fee_history.reward)
         // };
 
-        let (max_fee_per_gas, max_priority_fee_per_gas) = utils::eip1559_default_estimator(base_fee_per_gas, fee_history.reward);
+        let (max_fee_per_gas, max_priority_fee_per_gas) = utils::eip1559_default_estimator(base_fee_per_gas, vec![]);
 
         Ok((max_fee_per_gas, max_priority_fee_per_gas))
     }
